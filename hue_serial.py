@@ -9,17 +9,20 @@ ARDUINO = '/dev/ttyACM0'
 def read_serial(port=9600):
     ser = serial.Serial(ARDUINO, port)
     while True:
-        r = str(ser.readline())
-        print(r)
-        if 'A' in r:
-            hue.toggle_lights()
-        elif '1' in r:
-            hue.button_1()
-        elif '2' in r:
-            hue.button_2()
-        elif '3' in r:
-            hue.button_3()
-        time.sleep(5)
+        try:
+            r = str(ser.readline())
+            print(r)
+            if 'A' in r:
+                hue.toggle_lights()
+            elif '1' in r:
+                hue.button_1()
+            elif '2' in r:
+                hue.button_2()
+            elif '3' in r:
+                hue.button_3()
+            time.sleep(5)
+        except KeyboardInterrupt:
+            print('SCript stopped.')
 
 
 if __name__ == '__main__':
