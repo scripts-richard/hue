@@ -22,7 +22,8 @@ def read_serial(port=9600):
                 hue.button_3()
             time.sleep(5)
         except KeyboardInterrupt:
-            print('SCript stopped.')
+            print('\n--- Script stopped ---')
+            break
 
 
 if __name__ == '__main__':
