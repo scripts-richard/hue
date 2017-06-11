@@ -8,16 +8,15 @@ ARDUINO = '/dev/ttyACM0'
 
 def read_serial(port=9600):
     ser = serial.Serial(ARDUINO, port)
-    previous_r = ''
     while True:
         try:
             try:
                 r = str(ser.readline())
+                print('Key press:', r[2])
             except serial.SerialException:
                 print('Serial read failed')
+                continue
 
-            if r != previous_r:
-                print('Key press:', r[2])
             if 'A' in r:
                 print('Toggling lights.')
                 hue.toggle_lights()
