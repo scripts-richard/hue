@@ -8,16 +8,16 @@
       </div>
       <div class="panel-body">
         <p class="RC">
-          <b>R</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="RC{{ light }}" id="R{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
+          <span class="label label-default">R</span> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="254" data-slider-step="1" data-slider-value="{{ colors[light]['r'] }}" data-slider-id="RC{{ light }}" id="R{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
         </p>
         <p class="GC">
-          <b>G</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="GC{{ light }}" id="G{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
+          <span class="label label-default">G</span> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="254" data-slider-step="1" data-slider-value="{{ colors[light]['g'] }}" data-slider-id="GC{{ light }}" id="G{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
         </p>
         <p class="BC">
-          <b>B</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="BC{{ light }}" id="B{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
+          <span class="label label-default">B</span> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="254" data-slider-step="1" data-slider-value="{{ colors[light]['b'] }}" data-slider-id="BC{{ light }}" id="B{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
         </p>
 
-        <div id="RGB{{ light }}" class="well" ></div>
+        <div id="RGB{{ light }}" class="well" style="background: rgb({{ colors[light]['r'] }}, {{ colors[light]['g'] }}, {{ colors[light]['b'] }})"></div>
 
         <p>
           <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="BRT{{ light }}" id="BR{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />

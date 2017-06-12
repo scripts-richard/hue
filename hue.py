@@ -70,6 +70,7 @@ def button_3():
 def rgb_to_xy(r, g, b):
     rgb = [r, g, b]
 
+    # Apply gamma correction
     for i in range(3):
         rgb[i] /= 255
         if rgb[i] > 0.04045:
@@ -79,11 +80,46 @@ def rgb_to_xy(r, g, b):
 
     r, g, b = rgb
 
-    x = r * 0.664511 + g * 0.154324 + b * 0.162028
-    y = r * 0.283881 + g * 0.668433 + b * 0.047685
-    z = r * 0.000088 + g * 0.072310 + b * 0.986039
+    # Convert RGB to XYZ using Wide RGB D65 conversion
+    X = r * 0.664511 + g * 0.154324 + b * 0.162028
+    Y = r * 0.283881 + g * 0.668433 + b * 0.047685
+    Z = r * 0.000088 + g * 0.072310 + b * 0.986039
 
-    return x / (x + y + z), y / (x + y + z)
+    # Calcualte xy values
+    x = X / (X + Y + Z)
+    y = Y / (X + Y + Z)
+
+    # Y is the brightness value
+    return x, y, int(Y)
+
+
+def xy_to_rgb(x, y, brightness):
+    # xy values to XYZ
+    z = 1 - x - y
+    Y = brightness
+    X = Y / y * x
+    Z = Y / y * z
+
+    # Convert to RGB using Wide RGB D65 conversion
+    r = X * 1.656492 - Y * 0.354851 - Z * 0.255038
+    g = -X * 0.707196 + Y * 1.655397 + Z * 0.036152
+    b = X * 0.051713 - Y * 0.121364 + Z * 1.011530
+
+    # Apply reverse gamma correction
+    rgb = [r, g, b]
+    for i in range(3):
+        if rgb[i] <= 0.0031308:
+            rgb[i] *= 12.92
+        else:
+            rgb[i] = 1.055 * (rgb[i] ** (1 / 2.4)) - 0.055
+
+    r, g, b = rgb
+
+    print('r', r)
+    print('g', g)
+    print('b', b)
+
+    return int(r * 255), int(g * 255), int(b * 255)
 
 
 """
