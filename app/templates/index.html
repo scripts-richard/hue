@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% for light in lights %}
+    <div class="list-group">
+      <h4 class="list-group-item-heading">{{ lights[light]['name'] }}</h4>
+
+      <p class="RC">
+        <b>R</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="RC{{ light }}" id="R{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
+      </p>
+      <p class="GC">
+        <b>G</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="GC{{ light }}" id="G{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
+      </p>
+      <p class="BC">
+        <b>B</b> <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="BC{{ light }}" id="B{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
+      </p>
+      <p>
+        <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="BRT{{ light }}" id="BR{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
+      </p>
+
+      <div id="RGB{{ light }}" class="RGB" style="background: grey;">
+
+      </div>
+
+    </div>
+  {% endfor %}
+
+  <script type=text/javascript src="{{ url_for('static', filename='third_party/js/jquery-3.2.1.min.js') }}"></script>
+
+  <script type=text/javascript src="{{ url_for('static', filename='third_party/js/bootstrap-slider.js') }}"></script>
+
+  {% block javascript %}
+    <script type=text/javascript>{% include "script.js" %}</script>
+  {% endblock %}
+{% endblock %}
