@@ -20,7 +20,7 @@
         <div id="RGB{{ light }}" class="well" style="background: rgb({{ colors[light]['r'] }}, {{ colors[light]['g'] }}, {{ colors[light]['b'] }})"></div>
 
         <p>
-          <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="128" data-slider-id="BRT{{ light }}" id="BR{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
+          <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="255" data-slider-step="1" data-slider-value="{{ lights[light]['state']['bri'] }}" data-slider-id="BRT{{ light }}" id="BR{{ light }}" data-slider-tooltip="hide" data-slider-handle="round" />
         </p>
       </div>
     </div>
