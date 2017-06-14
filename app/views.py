@@ -13,6 +13,7 @@ def index():
     colors = {}
     form = FlaskForm()
     on = False
+    count = len(lights)
 
     for light in lights:
         x = lights[light]['state']['xy'][0]
@@ -23,18 +24,37 @@ def index():
         if lights[light]['state']['on']:
             on = True
 
-    if form.validate_on_submit():
-        print(request.args.get())
-
     return render_template('index.html',
                            title='Hue Control',
                            lights=lights,
                            colors=colors,
                            form=form,
-                           on=on)
+                           on=on,
+                           count=count)
 
 
 @app.route('/toggle/<light>', methods=['GET', 'POST'])
 def toggle(light):
     hue.toggle_light(light)
+    return json.dumps({'success': True})
+
+
+@app.route('/toggle_all', methods=['GET', 'POST'])
+def toggle_all():
+    hue.toggle_lights()
+    return json.dumps({'success': True})
+
+
+@app.route('/apply_changes', methods=['POST'])
+def apply_changes():
+    data = request.form
+    colors = {}
+    for key, val in data.items():
+        if key != 'csrf_token':
+            light_id = key[1]
+            color = key[0]
+            if light_id not in colors:
+                colors[light_id] = {}
+            colors[light_id][color] = val
+    hue.update_lights_rgb(colors)
     return json.dumps({'success': True})

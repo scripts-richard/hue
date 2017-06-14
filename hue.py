@@ -107,7 +107,7 @@ def rgb_to_xy(r, g, b):
     y = Y / (X + Y + Z)
 
     # Y is the brightness value
-    return x, y, int(Y)
+    return x, y, int(Y * 254)
 
 
 def xy_to_rgb(x, y, brightness):
@@ -134,8 +134,18 @@ def xy_to_rgb(x, y, brightness):
     return int(r * 255), int(g * 255), int(b * 255)
 
 
-def set_rgb(r, g, b):
-    pass
+def update_lights_rgb(lights):
+    print(lights)
+    for light, val in lights.items():
+        r = int(val['r'])
+        g = int(val['g'])
+        b = int(val['b'])
+        bri = int(val['y'])
+        x, y, _ = rgb_to_xy(r, g, b)
+        xy = '[' + str(x) + ', ' + str(y) + ']'
+        light_address = BASE_ADDRESS + '/' + light + '/state'
+        body = '{"bri": ' + str(bri) + ', "xy": ' + xy + '}'
+        requests.put(light_address, data=body)
 
 
 """
