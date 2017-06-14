@@ -25,15 +25,32 @@ def power_off():
         requests.put(light_address, data='{"on": false}')
 
 
-def toggle_lights():
+def toggle_light(light):
     lights = get_lights()
-    for light in lights:
+    if light in lights:
         if lights[light]['state']['on']:
             body = '{"on": false}'
         else:
             body = '{"on": true}'
         light_address = BASE_ADDRESS + '/' + light + '/state'
         requests.put(light_address, data=body)
+    else:
+        print('Invalid light.')
+
+
+def toggle_lights():
+    lights = get_lights()
+    all_off = True
+    for light in lights:
+        if lights[light]['state']['on']:
+            all_off = False
+
+    for light in lights:
+        light_address = BASE_ADDRESS + '/' + light + '/state'
+        if lights[light]['state']['on']:
+            requests.put(light_address, data='{"on": false}')
+        elif all_off:
+            requests.put(light_address, data='{"on": true}')
 
 
 def button_1():
@@ -114,12 +131,11 @@ def xy_to_rgb(x, y, brightness):
             rgb[i] = 1.055 * (rgb[i] ** (1 / 2.4)) - 0.055
 
     r, g, b = rgb
-
-    print('r', r)
-    print('g', g)
-    print('b', b)
-
     return int(r * 255), int(g * 255), int(b * 255)
+
+
+def set_rgb(r, g, b):
+    pass
 
 
 """

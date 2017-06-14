@@ -1,5 +1,11 @@
 body {margin: 3%;}
 
+#mainpwr {
+  max-width: 500px;
+  margin: auto;
+  margin-bottom: 5vh;
+}
+
 .RC .slider-selection {background: #FF8282;}
 
 .RC .slider-handle {background: red;}
@@ -13,3 +19,11 @@ body {margin: 3%;}
 .BC .slider-handle {background: blue;}
 
 .R, .G, .B {width: 300px;}
+
+.panel {
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#apply {margin: auto;}

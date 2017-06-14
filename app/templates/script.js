@@ -1,3 +1,16 @@
+function toggle (light) {
+  $.ajax({
+    url: '/toggle/' + light,
+    success: function(id) {
+      if ($('#pwr' + light).hasClass('active')) {
+        $('#pwr' + light).removeClass('active');
+      } else {
+        $('#pwr' + light).addClass('active');
+      }
+    }
+  });
+}
+
 {% for light in lights %}
 
 var RGBChange{{ light }} = function () {
