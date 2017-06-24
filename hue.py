@@ -1,38 +1,48 @@
 import json
 import requests
 
-from secret import IP, USERNAME
+from secret import USERNAME
 
 
-BASE_ADDRESS = '/'.join(['http:/', IP, 'api', USERNAME, 'lights'])
+def get_hue_ip():
+    url = 'https://www.meethue.com/api/nupnp'
+    data = json.loads(requests.get(url).content.decode())
+    return data[0]['internalipaddress']
+
+
+def make_base_address():
+    return '/'.join(['http:/', get_hue_ip(), 'api', USERNAME, 'lights'])
 
 
 def get_lights():
-    return json.loads(requests.get(BASE_ADDRESS).content.decode())
+    return json.loads(requests.get(make_base_address()).content.decode())
 
 
 def power_on():
     lights = get_lights()
+    base_address = make_base_address()
     for light in lights:
-        light_address = BASE_ADDRESS + '/' + light + '/state'
+        light_address = base_address + '/' + light + '/state'
         requests.put(light_address, data='{"on": true}')
 
 
 def power_off():
     lights = get_lights()
+    base_address = make_base_address()
     for light in lights:
-        light_address = BASE_ADDRESS + '/' + light + '/state'
+        light_address = base_address + '/' + light + '/state'
         requests.put(light_address, data='{"on": false}')
 
 
 def toggle_light(light):
     lights = get_lights()
+    base_address = make_base_address()
     if light in lights:
         if lights[light]['state']['on']:
             body = '{"on": false}'
         else:
             body = '{"on": true}'
-        light_address = BASE_ADDRESS + '/' + light + '/state'
+        light_address = base_address + '/' + light + '/state'
         requests.put(light_address, data=body)
     else:
         print('Invalid light.')
@@ -41,12 +51,13 @@ def toggle_light(light):
 def toggle_lights():
     lights = get_lights()
     all_off = True
+    base_address = make_base_address()
     for light in lights:
         if lights[light]['state']['on']:
             all_off = False
 
     for light in lights:
-        light_address = BASE_ADDRESS + '/' + light + '/state'
+        light_address = base_address + '/' + light + '/state'
         if lights[light]['state']['on']:
             requests.put(light_address, data='{"on": false}')
         elif all_off:
@@ -56,8 +67,9 @@ def toggle_lights():
 def button_1():
     # All lights to bright white
     lights = get_lights()
+    base_address = make_base_address()
     for light in lights:
-        light_address = BASE_ADDRESS + '/' + light + '/state'
+        light_address = base_address + '/' + light + '/state'
         body = '{"on": true, "hue": 33849, "sat": 200, "bri": 254, "ct": 153}'
         requests.put(light_address, data=body)
 
@@ -68,8 +80,9 @@ def button_2():
     states = ['{"on": true, "hue": 1954, "sat": 227, "ct": 153, "bri": 195}',
               '{"on": true, "hue": 8394, "sat": 196, "ct": 500, "bri": 234}',
               '{"on": true, "hue": 18919, "sat": 212, "ct": 372, "bri": 234}']
+    base_address = make_base_address()
     for i in range(1, len(lights) + 1):
-        light_address = BASE_ADDRESS + '/' + str(i) + '/state'
+        light_address = base_address + '/' + str(i) + '/state'
         requests.put(light_address, data=states[i - 1])
 
 
@@ -79,8 +92,9 @@ def button_3():
     states = ['{"on": true, "hue": 42325, "sat": 252, "ct": 153, "bri": 168}',
               '{"on": true, "hue": 38779, "sat": 253, "ct": 153, "bri": 201}',
               '{"on": true, "hue": 33858, "sat": 254, "ct": 156, "bri": 188}']
+    base_address = make_base_address()
     for i in range(1, len(lights) + 1):
-        light_address = BASE_ADDRESS + '/' + str(i) + '/state'
+        light_address = base_address + '/' + str(i) + '/state'
         requests.put(light_address, data=states[i - 1])
 
 
@@ -135,7 +149,7 @@ def xy_to_rgb(x, y, brightness):
 
 
 def update_lights_rgb(lights):
-    print(lights)
+    base_address = make_base_address()
     for light, val in lights.items():
         r = int(val['r'])
         g = int(val['g'])
@@ -143,17 +157,6 @@ def update_lights_rgb(lights):
         bri = int(val['y'])
         x, y, _ = rgb_to_xy(r, g, b)
         xy = '[' + str(x) + ', ' + str(y) + ']'
-        light_address = BASE_ADDRESS + '/' + light + '/state'
+        light_address = base_address + '/' + light + '/state'
         body = '{"bri": ' + str(bri) + ', "xy": ' + xy + '}'
         requests.put(light_address, data=body)
-
-
-"""
-Info about all lights:
-http://192.168.1.64/api/UF2tbuOItC7lfaTyTaDmUxA6lxSREPuc7brFxQYY/lights
-
-Infor about specific light:
-http://192.168.1.64/api/UF2tbuOItC7lfaTyTaDmUxA6lxSREPuc7brFxQYY/lights/1
-
-
-"""
