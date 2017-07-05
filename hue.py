@@ -1,7 +1,8 @@
 import json
 import requests
 
-from secret import USERNAME
+# User specific settings (Hue bridge username and optional static IP)
+import secret
 
 
 def rgb_to_xy(r, g, b):
@@ -56,7 +57,11 @@ def xy_to_rgb(x, y, brightness):
 
 class Hue:
     def __init__(self):
-        self.ip = self.get_hue_ip()
+        try:
+            self.ip = secret.STATIC_IP
+        except AttributeError:
+            self.ip = self.get_hue_ip()
+
         self.base_address = self.make_base_address()
         self.lights = self.get_lights()
 
@@ -66,7 +71,7 @@ class Hue:
         return data[0]['internalipaddress']
 
     def make_base_address(self):
-        return '/'.join(['http:/', self.ip, 'api', USERNAME, 'lights'])
+        return '/'.join(['http:/', self.ip, 'api', secret.USERNAME, 'lights'])
 
     def get_lights(self):
         return json.loads(requests.get(self.base_address).content.decode())
