@@ -55,20 +55,21 @@ def xy_to_rgb(x, y, brightness):
     return int(r * 255), int(g * 255), int(b * 255)
 
 
+def get_hue_ip():
+    url = 'https://www.meethue.com/api/nupnp'
+    data = json.loads(requests.get(url).content.decode())
+    return data[0]['internalipaddress']
+
+
 class Hue:
     def __init__(self):
         try:
             self.ip = secret.STATIC_IP
         except AttributeError:
-            self.ip = self.get_hue_ip()
+            self.ip = get_hue_ip()
 
         self.base_address = self.make_base_address()
         self.lights = self.get_lights()
-
-    def get_hue_ip(self):
-        url = 'https://www.meethue.com/api/nupnp'
-        data = json.loads(requests.get(url).content.decode())
-        return data[0]['internalipaddress']
 
     def make_base_address(self):
         return '/'.join(['http:/', self.ip, 'api', secret.USERNAME, 'lights'])
